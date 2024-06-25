@@ -1,4 +1,4 @@
-from random import randint
+from random import choice, randint
 
 import pygame
 
@@ -56,7 +56,7 @@ class Apple(GameObject):
     """Object Apple, initialized on grid at random."""
 
     def __init__(self):
-        self.position = self.randomize_postion()
+        self.position = self.randomize_position()
         self.body_color = APPLE_COLOR
 
     def draw(self):
@@ -65,7 +65,7 @@ class Apple(GameObject):
         pygame.draw.rect(screen, self.body_color, rect)
         pygame.draw.rect(screen, BORDER_COLOR, rect, 1)
 
-    def randomize_postion(self):
+    def randomize_position(self):
         """Method randomize_position randomizes apples position on the grid"""
         self.position = (
             randint(0, GRID_WIDTH - 1) * GRID_SIZE,
@@ -78,12 +78,9 @@ class Snake(GameObject):
     """Object Snake, initialized on grid at random."""
 
     def __init__(self):
-        self.positions = [
-            (
-                randint(0, SCREEN_WIDTH - 1) * GRID_SIZE,
-                randint(0, SCREEN_HEIGHT - 1) * GRID_SIZE,
-            )
-        ]
+        self.position = (randint(0, SCREEN_WIDTH - 1) * GRID_SIZE,
+                         randint(0, SCREEN_HEIGHT - 1) * GRID_SIZE)
+        self.positions = [self.position]
         self.body_color = SNAKE_COLOR
         self.length = 1
         self.direction = RIGHT
@@ -170,7 +167,7 @@ def main():
         # Тут опишите основную логику игры
         if snake.get_head_position() == apple.position:
             snake.length += 1
-            apple.randomize_postion()
+            apple.randomize_position()
         elif snake.get_head_position() in snake.positions[1:]:
             snake.reset()
 
