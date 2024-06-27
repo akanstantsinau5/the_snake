@@ -57,7 +57,9 @@ class GameObject:
 class Apple(GameObject):
     """Class Apple, parent class GameObject."""
 
-    def __init__(self, snake):
+    def __init__(self, snake=None):
+        if snake is None:
+            snake = Snake()
         """Initialize class Apple."""
         self.snake = snake
         self.position = self.randomize_position()
