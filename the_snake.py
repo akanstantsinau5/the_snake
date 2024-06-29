@@ -1,7 +1,4 @@
-"""
-This module provides functionality for generating random grid
-positions using randint and pygame intitialization and display setup.
-"""
+"""This module provides functionality for generating random grid position."""
 from random import randint
 import pygame as pg
 
@@ -57,12 +54,11 @@ class GameObject:
 class Apple(GameObject):
     """Class Apple, parent class GameObject."""
 
-    def __init__(self, snake=None):
-        if snake is None:
-            snake = Snake()
-        """Initialize class Apple."""
-        self.snake = snake
-        self.position = self.randomize_position()
+    def __init__(self, positions_taken=None):
+        """Method initializes class Apple."""
+        if positions_taken is None:
+            positions_taken = []
+        self.position = self.randomize_position(positions_taken)
         self.body_color = APPLE_COLOR
 
     def draw(self):
@@ -71,14 +67,14 @@ class Apple(GameObject):
         pg.draw.rect(screen, self.body_color, rect)
         pg.draw.rect(screen, BORDER_COLOR, rect, 1)
 
-    def randomize_position(self):
-        """Method randomized position of the Apple object on the grid."""
+    def randomize_position(self, positions_taken):
+        """Method randomizes position of the Apple object on the grid."""
         while True:
             position = (
                 randint(0, GRID_WIDTH - 1) * GRID_SIZE,
                 randint(0, GRID_HEIGHT - 1) * GRID_SIZE,
             )
-            if not self.snake.position_check(position):
+            if position not in positions_taken:
                 return position
 
 
@@ -125,10 +121,6 @@ class Snake(GameObject):
         """Methods returns Snakes position."""
         return self.positions[0]
 
-    def position_check(self, position):
-        """This method checks if position is occupied by snake"""
-        return position in self.positions
-
     def reset(self):
         """Method resets the game to initial settings."""
         self.position = (randint(0, SCREEN_WIDTH - 1) * GRID_SIZE,
@@ -163,7 +155,7 @@ def main():
     # Инициализация PyGame:
     pg.init()
     snake = Snake()
-    apple = Apple(snake)
+    apple = Apple(snake.positions)
 
     while True:
         clock.tick(SPEED)
@@ -174,10 +166,10 @@ def main():
 
         if snake.get_head_position() == apple.position:
             snake.length += 1
-            apple.position = apple.randomize_position()
+            apple.position = apple.randomize_position(snake.positions)
         elif snake.get_head_position() in snake.positions[1:]:
             snake.reset()
-            apple.position = apple.randomize_position()
+            apple.position = apple.randomize_position(snake.positions)
 
         apple.draw()
         snake.draw()
