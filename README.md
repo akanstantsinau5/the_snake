@@ -1,3 +1,3 @@
 # the_snake
 
-Project the snake game.
+Mini project: snake game in python.
